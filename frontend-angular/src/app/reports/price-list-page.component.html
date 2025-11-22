@@ -1,0 +1,29 @@
+<div class="card">
+  <h2>💰 Lista de Preços</h2>
+  <p style="color: var(--muted); margin-bottom: 20px;">Relação de todos os produtos do estoque em ordem alfabética, constando do preço de cada um deles, unidade de medida e categoria.</p>
+  <div *ngIf="items.length === 0" class="empty-state">
+    <h3>Nenhum produto cadastrado</h3>
+    <p>Cadastre produtos para visualizar a lista de preços</p>
+  </div>
+  <table class="table" *ngIf="items.length > 0">
+    <thead>
+      <tr>
+        <th>Produto</th>
+        <th>Preço Unitário</th>
+        <th>Unidade</th>
+        <th>Categoria</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let i of items">
+        <td><strong>{{i.nome}}</strong></td>
+        <td><strong style="color: var(--primary); font-size: 16px;">R$ {{i.precoUnitario | number:'1.2-2'}}</strong></td>
+        <td><span class="badge">{{i.unidade}}</span></td>
+        <td><span class="badge">{{i.categoria}}</span></td>
+      </tr>
+    </tbody>
+  </table>
+  <div *ngIf="items.length > 0" style="margin-top: 20px; padding-top: 16px; border-top: 2px solid var(--border);">
+    <strong>Total de produtos: {{items.length}}</strong>
+  </div>
+</div>
