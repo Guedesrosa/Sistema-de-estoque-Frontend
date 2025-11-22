@@ -1,0 +1,131 @@
+<div class="grid cols-2">
+  <div class="card">
+    <h2>📦 Cadastro de Produto</h2>
+    <form class="form" [formGroup]="form" (ngSubmit)="salvar()">
+      <div class="row two">
+        <div>
+          <label>Nome do Produto *</label>
+          <input type="text" placeholder="Ex: Arroz Integral" formControlName="nome">
+        </div>
+        <div>
+          <label>Preço Unitário (R$) *</label>
+          <input type="number" step="0.01" min="0.01" placeholder="0.00" formControlName="precoUnitario">
+        </div>
+      </div>
+      <div class="row three">
+        <div>
+          <label>Unidade de Medida *</label>
+          <input type="text" placeholder="Ex: kg, un, litro" formControlName="unidade">
+        </div>
+        <div>
+          <label>Quantidade em Estoque *</label>
+          <input type="number" min="0" placeholder="0" formControlName="quantidadeEstoque">
+        </div>
+        <div>
+          <label>Categoria *</label>
+          <select formControlName="categoria">
+            <option value="" disabled>Selecione uma categoria</option>
+            <option *ngFor="let c of categorias" [value]="c">{{c}}</option>
+          </select>
+        </div>
+      </div>
+      <div class="row three">
+        <div>
+          <label>Quantidade Mínima *</label>
+          <input type="number" min="0" placeholder="0" formControlName="quantidadeMinima">
+        </div>
+        <div>
+          <label>Quantidade Máxima *</label>
+          <input type="number" min="0" placeholder="0" formControlName="quantidadeMaxima">
+        </div>
+        <div style="display: flex; align-items: flex-end;">
+          <button type="submit" [disabled]="form.invalid" style="width: 100%;">
+            {{form.value.id ? '✏️ Atualizar' : '➕ Adicionar'}}
+          </button>
+        </div>
+      </div>
+      <div *ngIf="form.value.id" style="margin-top: 8px;">
+        <button type="button" class="secondary" (click)="form.reset(); form.patchValue({precoUnitario: 0, quantidadeEstoque: 0, quantidadeMinima: 0, quantidadeMaxima: 0})" style="width: 100%;">
+          🔄 Cancelar Edição
+        </button>
+      </div>
+    </form>
+    <div class="divider"></div>
+    <div class="section-title">💰 Reajuste de Preços</div>
+    <div style="display: flex; gap: 12px; align-items: flex-end;">
+      <div style="flex: 1;">
+        <label>Percentual de Reajuste (%)</label>
+        <input type="number" step="0.1" placeholder="Ex: 10 para +10%" #p>
+      </div>
+      <button (click)="p.value && reajustar(p.valueAsNumber)" [disabled]="!p.value" class="success">
+        📈 Aplicar Reajuste
+      </button>
+    </div>
+  </div>
+  <div class="card">
+    <h2>📋 Lista de Produtos</h2>
+    <div class="toolbar">
+      <input class="search" type="text" placeholder="🔍 Buscar por nome ou categoria..." [(ngModel)]="search" (input)="applyFilter()">
+      <div class="pagination">
+        <button class="secondary small" (click)="page=Math.max(1,page-1);applyFilter()" [disabled]="page === 1">◀ Anterior</button>
+        <span>Página {{page}} de {{getTotalPages()}}</span>
+        <button class="secondary small" (click)="page=page+1;applyFilter()" [disabled]="page * pageSize >= items.length">Próxima ▶</button>
+      </div>
+    </div>
+    <div *ngIf="filtered.length === 0" class="empty-state">
+      <h3>Nenhum produto encontrado</h3>
+      <p>{{search ? 'Tente ajustar sua busca' : 'Adicione seu primeiro produto'}}</p>
+    </div>
+    <table class="table" *ngIf="filtered.length > 0">
+      <thead>
+      <tr>
+        <th>Produto</th>
+        <th>Preço</th>
+        <th>Unidade</th>
+        <th>Categoria</th>
+        <th>Estoque</th>
+        <th>Status</th>
+        <th>Ações</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let i of filtered">
+        <td><strong>{{i.nome}}</strong></td>
+        <td>R$ {{i.precoUnitario | number:'1.2-2'}}</td>
+        <td>{{i.unidade}}</td>
+        <td><span class="badge">{{i.categoria}}</span></td>
+        <td>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span>{{i.quantidadeEstoque}}</span>
+            <span class="status-badge" 
+                  [class.low]="i.quantidadeEstoque < i.quantidadeMinima"
+                  [class.medium]="i.quantidadeEstoque >= i.quantidadeMinima && i.quantidadeEstoque < i.quantidadeMaxima * 0.7"
+                  [class.high]="i.quantidadeEstoque >= i.quantidadeMaxima * 0.7">
+              {{i.quantidadeEstoque < i.quantidadeMinima ? '⚠️ Baixo' : (i.quantidadeEstoque >= i.quantidadeMaxima * 0.7 ? '✅ OK' : '⚡ Médio')}}
+            </span>
+          </div>
+        </td>
+        <td>
+          <div style="font-size: 12px; color: var(--muted);">
+            <div>Mín: {{i.quantidadeMinima}}</div>
+            <div>Máx: {{i.quantidadeMaxima}}</div>
+          </div>
+        </td>
+        <td>
+          <div style="display: flex; gap: 6px;">
+            <button class="secondary small" (click)="editar(i)">✏️</button>
+            <button class="danger small" (click)="pedirExclusao(i)">🗑️</button>
+          </div>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<app-confirm-modal 
+  [open]="confirmOpen" 
+  title="⚠️ Confirmar Exclusão" 
+  [description]="'Deseja realmente excluir o produto \'' + (toDelete?.nome || '') + '\'? Esta ação não pode ser desfeita.'" 
+  (confirm)="confirmarExclusao()" 
+  (cancel)="cancelarExclusao()">
+</app-confirm-modal>
