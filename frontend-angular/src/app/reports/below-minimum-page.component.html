@@ -1,0 +1,38 @@
+<div class="card">
+  <h2>⚠️ Produtos Abaixo da Quantidade Mínima</h2>
+  <p style="color: var(--muted); margin-bottom: 20px;">Relatório dos produtos que estão abaixo da quantidade mínima contendo o nome do produto, a quantidade mínima e a quantidade em estoque.</p>
+  <div *ngIf="items.length === 0" class="empty-state">
+    <h3>✅ Nenhum produto abaixo do mínimo</h3>
+    <p>Todos os produtos estão com estoque adequado!</p>
+  </div>
+  <div *ngIf="items.length > 0" class="stats-card" style="background: linear-gradient(135deg, var(--danger) 0%, var(--warning) 100%); margin-bottom: 24px;">
+    <h3>Produtos que Necessitam Reposição</h3>
+    <p class="value">{{items.length}}</p>
+  </div>
+  <table class="table" *ngIf="items.length > 0">
+    <thead>
+      <tr>
+        <th>Produto</th>
+        <th>Quantidade Mínima</th>
+        <th>Quantidade Atual</th>
+        <th>Diferença</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let i of items">
+        <td><strong>{{i.nome}}</strong></td>
+        <td><span class="badge">{{i.minima}}</span></td>
+        <td>
+          <span class="status-badge low">{{i.atual}}</span>
+        </td>
+        <td>
+          <strong style="color: var(--danger);">{{i.minima - i.atual}} unidades</strong>
+        </td>
+        <td>
+          <span class="status-badge low">⚠️ Crítico</span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
