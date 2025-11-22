@@ -1,0 +1,20 @@
+<div class="nav">
+  <div style="display: flex; align-items: center; gap: 12px; flex: 1;">
+    <div style="font-size: 20px; font-weight: 700; color: var(--primary);">📦 Sistema de Estoque</div>
+  </div>
+  <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+    <a routerLink="/produtos" [routerLinkActive]="'router-link-active'">📦 Produtos</a>
+    <a routerLink="/categorias" [routerLinkActive]="'router-link-active'">🏷️ Categorias</a>
+    <a routerLink="/movimentacoes" [routerLinkActive]="'router-link-active'">📥 Movimentações</a>
+    <div style="width: 1px; height: 24px; background: var(--border); margin: 0 8px;"></div>
+    <a routerLink="/relatorios/lista-precos" [routerLinkActive]="'router-link-active'">💰 Lista de Preços</a>
+    <a routerLink="/relatorios/balanco" [routerLinkActive]="'router-link-active'">📊 Balanço</a>
+    <a routerLink="/relatorios/abaixo-minimo" [routerLinkActive]="'router-link-active'">⚠️ Abaixo do Mínimo</a>
+    <a routerLink="/relatorios/por-categoria" [routerLinkActive]="'router-link-active'">📂 Por Categoria</a>
+    <a routerLink="/relatorios/top-movimentacoes" [routerLinkActive]="'router-link-active'">📈 Top Movimentações</a>
+  </div>
+</div>
+<div class="container">
+  <router-outlet></router-outlet>
+</div>
+<app-toasts></app-toasts>
