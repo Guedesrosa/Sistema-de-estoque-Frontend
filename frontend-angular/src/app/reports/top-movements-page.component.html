@@ -1,0 +1,34 @@
+<div class="card">
+  <h2>📈 Top Movimentações</h2>
+  <p style="color: var(--muted); margin-bottom: 24px;">Relatório do produto que mais teve saída e mais teve entrada no estoque.</p>
+  <div class="grid cols-2">
+    <div class="card" style="background: linear-gradient(135deg, var(--success) 0%, var(--info) 100%); color: white; border: none;">
+      <h2 style="color: white; border: none;">📥 Maior Entrada</h2>
+      <div *ngIf="entrada; else none" style="text-align: center; padding: 20px 0;">
+        <div style="font-size: 48px; margin-bottom: 16px;">📦</div>
+        <p style="font-size: 24px; font-weight: 700; margin: 0 0 8px 0;">{{entrada?.produto}}</p>
+        <p style="font-size: 18px; opacity: 0.9; margin: 0;">{{entrada?.quantidade}} unidades</p>
+      </div>
+      <ng-template #none>
+        <div class="empty-state" style="color: rgba(255,255,255,0.8);">
+          <h3 style="color: white;">Nenhuma movimentação de entrada</h3>
+          <p>Registre movimentações para visualizar os dados</p>
+        </div>
+      </ng-template>
+    </div>
+    <div class="card" style="background: linear-gradient(135deg, var(--danger) 0%, var(--warning) 100%); color: white; border: none;">
+      <h2 style="color: white; border: none;">📤 Maior Saída</h2>
+      <div *ngIf="saida; else none2" style="text-align: center; padding: 20px 0;">
+        <div style="font-size: 48px; margin-bottom: 16px;">📤</div>
+        <p style="font-size: 24px; font-weight: 700; margin: 0 0 8px 0;">{{saida?.produto}}</p>
+        <p style="font-size: 18px; opacity: 0.9; margin: 0;">{{saida?.quantidade}} unidades</p>
+      </div>
+      <ng-template #none2>
+        <div class="empty-state" style="color: rgba(255,255,255,0.8);">
+          <h3 style="color: white;">Nenhuma movimentação de saída</h3>
+          <p>Registre movimentações para visualizar os dados</p>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div>
