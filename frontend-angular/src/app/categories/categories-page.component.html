@@ -1,0 +1,90 @@
+<div class="grid cols-2">
+  <div class="card">
+    <h2>🏷️ Cadastro de Categoria</h2>
+    <form class="form" [formGroup]="form" (ngSubmit)="salvar()">
+      <div class="row two">
+        <div>
+          <label>Nome da Categoria *</label>
+          <input type="text" placeholder="Ex: Limpeza, Enlatados, Vegetais" formControlName="nome">
+        </div>
+        <div>
+          <label>Tamanho *</label>
+          <select formControlName="tamanho">
+            <option *ngFor="let t of tamanhos" [value]="t">{{t}}</option>
+          </select>
+        </div>
+      </div>
+      <div class="row two">
+        <div>
+          <label>Embalagem *</label>
+          <select formControlName="embalagem">
+            <option *ngFor="let e of embalagens" [value]="e">{{e}}</option>
+          </select>
+        </div>
+        <div style="display: flex; align-items: flex-end;">
+          <button type="submit" [disabled]="form.invalid" style="width: 100%;">
+            {{form.value.id ? '✏️ Atualizar' : '➕ Adicionar'}}
+          </button>
+        </div>
+      </div>
+      <div *ngIf="form.value.id" style="margin-top: 8px;">
+        <button type="button" class="secondary" (click)="form.reset(); form.patchValue({tamanho: 'Médio', embalagem: 'Plástico'})" style="width: 100%;">
+          🔄 Cancelar Edição
+        </button>
+      </div>
+    </form>
+  </div>
+  <div class="card">
+    <h2>📂 Lista de Categorias</h2>
+    <div class="toolbar">
+      <input class="search" type="text" placeholder="🔍 Buscar categoria..." [(ngModel)]="search" (input)="applyFilter()">
+      <div class="pagination">
+        <button class="secondary small" (click)="page=Math.max(1,page-1);applyFilter()" [disabled]="page === 1">◀ Anterior</button>
+        <span>Página {{page}} de {{getTotalPages()}}</span>
+        <button class="secondary small" (click)="page=page+1;applyFilter()" [disabled]="page * pageSize >= items.length">Próxima ▶</button>
+      </div>
+    </div>
+    <div *ngIf="filtered.length === 0" class="empty-state">
+      <h3>Nenhuma categoria encontrada</h3>
+      <p>{{search ? 'Tente ajustar sua busca' : 'Adicione sua primeira categoria'}}</p>
+    </div>
+    <table class="table" *ngIf="filtered.length > 0">
+      <thead>
+      <tr>
+        <th>Categoria</th>
+        <th>Tamanho</th>
+        <th>Embalagem</th>
+        <th>Ações</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let i of filtered">
+        <td><strong>{{i.nome}}</strong></td>
+        <td>
+          <span class="badge" [style.background]="i.tamanho === 'Pequeno' ? 'var(--info-light)' : (i.tamanho === 'Médio' ? 'var(--warning-light)' : 'var(--success-light)')">
+            {{i.tamanho === 'Pequeno' ? '📦' : (i.tamanho === 'Médio' ? '📦📦' : '📦📦📦')}} {{i.tamanho}}
+          </span>
+        </td>
+        <td>
+          <span class="badge" [style.background]="i.embalagem === 'Lata' ? 'var(--warning-light)' : (i.embalagem === 'Vidro' ? 'var(--info-light)' : 'var(--primary-light)')">
+            {{i.embalagem === 'Lata' ? '🥫' : (i.embalagem === 'Vidro' ? '🍶' : '🧴')}} {{i.embalagem}}
+          </span>
+        </td>
+        <td>
+          <div style="display: flex; gap: 6px;">
+            <button class="secondary small" (click)="editar(i)">✏️</button>
+            <button class="danger small" (click)="pedirExclusao(i)">🗑️</button>
+          </div>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<app-confirm-modal 
+  [open]="confirmOpen" 
+  title="⚠️ Confirmar Exclusão" 
+  [description]="'Deseja realmente excluir a categoria \'' + (toDelete?.nome || '') + '\'? Produtos associados podem ser afetados.'" 
+  (confirm)="confirmarExclusao()" 
+  (cancel)="cancelarExclusao()">
+</app-confirm-modal>
