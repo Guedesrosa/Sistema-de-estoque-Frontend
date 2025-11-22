@@ -1,0 +1,9 @@
+<div class="toast">
+  <div *ngFor="let t of items; let i = index" class="item" [ngClass]="t.type">
+    <span *ngIf="t.type === 'success'">✅</span>
+    <span *ngIf="t.type === 'error'">❌</span>
+    <span *ngIf="t.type === 'info'">ℹ️</span>
+    <span *ngIf="t.type === 'warning'">⚠️</span>
+    <span>{{t.message}}</span>
+  </div>
+</div>
