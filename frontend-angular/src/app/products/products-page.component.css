@@ -1,0 +1,23 @@
+.card {
+  min-height: 400px;
+}
+
+label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+input.search {
+  max-width: 100%;
+}
+
+.table td {
+  vertical-align: middle;
+}
+
+.empty-state {
+  margin-top: 24px;
+}

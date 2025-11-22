@@ -1,0 +1,95 @@
+<div class="grid cols-2">
+  <div class="card">
+    <h2>📥 Registrar Movimentação</h2>
+    <form class="form" [formGroup]="form" (ngSubmit)="salvar()">
+      <div class="row two">
+        <div>
+          <label>Produto *</label>
+          <select formControlName="produtoId">
+            <option value="" disabled>Selecione um produto</option>
+            <option *ngFor="let p of produtos" [value]="p.id">
+              {{p.nome}} (Estoque: {{p.quantidadeEstoque}})
+            </option>
+          </select>
+        </div>
+        <div>
+          <label>Tipo de Movimentação *</label>
+          <select formControlName="tipo">
+            <option value="ENTRADA">📥 Entrada</option>
+            <option value="SAIDA">📤 Saída</option>
+          </select>
+        </div>
+      </div>
+      <div class="row two">
+        <div>
+          <label>Data da Movimentação *</label>
+          <input type="date" formControlName="data">
+        </div>
+        <div>
+          <label>Quantidade *</label>
+          <input type="number" min="1" placeholder="Quantidade" formControlName="quantidade">
+        </div>
+      </div>
+      <div *ngIf="form.value.produtoId && form.value.quantidade && form.value.tipo" class="info-box" 
+           [class.warning]="form.value.tipo === 'SAIDA' && isAbaixoMinimo()"
+           [class.info]="form.value.tipo === 'ENTRADA' && isAcimaMaximo()">
+        <div *ngIf="form.value.tipo === 'SAIDA'">
+          <strong>⚠️ Atenção:</strong> Após esta saída, o estoque será de 
+          <strong>{{getEstoqueAposMovimentacao()}}</strong> unidades.
+          <div *ngIf="isAbaixoMinimo()" style="margin-top: 8px; color: var(--danger);">
+            ⚠️ O estoque ficará abaixo da quantidade mínima!
+          </div>
+        </div>
+        <div *ngIf="form.value.tipo === 'ENTRADA'">
+          <strong>ℹ️ Informação:</strong> Após esta entrada, o estoque será de 
+          <strong>{{getEstoqueAposMovimentacao()}}</strong> unidades.
+          <div *ngIf="isAcimaMaximo()" style="margin-top: 8px; color: var(--warning);">
+            ⚠️ O estoque ficará acima da quantidade máxima!
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <button type="submit" [disabled]="form.invalid" style="width: 100%;">
+          💾 Registrar Movimentação
+        </button>
+      </div>
+    </form>
+  </div>
+  <div class="card">
+    <h2>📊 Histórico de Movimentações</h2>
+    <div class="toolbar">
+      <input class="search" type="text" placeholder="🔍 Buscar por produto..." [(ngModel)]="search" (input)="applyFilter()">
+      <div class="pagination">
+        <button class="secondary small" (click)="page=Math.max(1,page-1);applyFilter()" [disabled]="page === 1">◀ Anterior</button>
+        <span>Página {{page}} de {{getTotalPages()}}</span>
+        <button class="secondary small" (click)="page=page+1;applyFilter()" [disabled]="page * pageSize >= items.length">Próxima ▶</button>
+      </div>
+    </div>
+    <div *ngIf="filtered.length === 0" class="empty-state">
+      <h3>Nenhuma movimentação encontrada</h3>
+      <p>{{search ? 'Tente ajustar sua busca' : 'Registre sua primeira movimentação'}}</p>
+    </div>
+    <table class="table" *ngIf="filtered.length > 0">
+      <thead>
+      <tr>
+        <th>Produto</th>
+        <th>Data</th>
+        <th>Tipo</th>
+        <th>Quantidade</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let i of filtered">
+        <td><strong>{{i.produto?.nome || 'Produto não encontrado'}}</strong></td>
+        <td>{{i.data ? (i.data | date:'dd/MM/yyyy') : '-'}}</td>
+        <td>
+          <span class="status-badge" [class.entrada]="i.tipo === 'ENTRADA'" [class.saida]="i.tipo === 'SAIDA'">
+            {{i.tipo === 'ENTRADA' ? '📥 Entrada' : '📤 Saída'}}
+          </span>
+        </td>
+        <td><strong>{{i.quantidade}}</strong></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
