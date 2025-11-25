@@ -1,3 +1,8 @@
+/**
+ * Componente de pagina de gerenciamento de produtos
+ * Permite criar, editar, excluir produtos, realizar reajuste de precos em lote
+ * Inclui paginacao, busca e indicadores visuais de status de estoque
+ */
 import { Component } from '@angular/core'
 import { FormBuilder, Validators } from '@angular/forms'
 import { ProductService } from './product.service'

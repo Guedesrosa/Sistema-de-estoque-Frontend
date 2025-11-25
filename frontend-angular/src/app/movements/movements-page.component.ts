@@ -1,3 +1,8 @@
+/**
+ * Componente de pagina de registro de movimentacoes de estoque
+ * Permite registrar entradas e saidas de produtos com validacao de limites
+ * Exibe alertas quando estoque ficara abaixo do minimo ou acima do maximo
+ */
 import { Component } from '@angular/core'
 import { FormBuilder, Validators } from '@angular/forms'
 import { MovementService } from './movement.service'

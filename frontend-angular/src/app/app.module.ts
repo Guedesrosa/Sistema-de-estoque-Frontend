@@ -1,3 +1,18 @@
+/**
+ * Modulo raiz da aplicacao Angular
+ * Configura todos os componentes, modulos e dependencias necessarias para o funcionamento da aplicacao
+ * 
+ * Este modulo declara:
+ * - Componentes principais: AppComponent (componente raiz)
+ * - Componentes compartilhados: ToastsComponent, ConfirmModalComponent
+ * - Componentes de pagina: Products, Categories, Movements e todos os Relatorios
+ * 
+ * Importa os modulos necessarios:
+ * - BrowserModule: Para aplicacoes web
+ * - FormsModule e ReactiveFormsModule: Para formularios
+ * - HttpClientModule: Para requisicoes HTTP
+ * - AppRoutingModule: Para navegacao e rotas
+ */
 import { NgModule } from '@angular/core'
 import { BrowserModule } from '@angular/platform-browser'
 import { CommonModule } from '@angular/common'

@@ -1,3 +1,13 @@
+/**
+ * Configuracao de rotas da aplicacao
+ * Define todas as rotas disponiveis e mapeia URLs para componentes
+ * 
+ * Rotas disponiveis:
+ * - /produtos: Pagina de gerenciamento de produtos
+ * - /categorias: Pagina de gerenciamento de categorias
+ * - /movimentacoes: Pagina de registro de movimentacoes de estoque
+ * - /relatorios/*: Diferentes tipos de relatorios do sistema
+ */
 import { NgModule } from '@angular/core'
 import { RouterModule, Routes } from '@angular/router'
 import { ProductsPageComponent } from './products/products-page.component'
@@ -9,7 +19,9 @@ import { BelowMinimumPageComponent } from './reports/below-minimum-page.componen
 import { ByCategoryPageComponent } from './reports/by-category-page.component'
 import { TopMovementsPageComponent } from './reports/top-movements-page.component'
 
+// Definicao de todas as rotas da aplicacao
 const routes: Routes = [
+  // Rota raiz redireciona para a pagina de produtos
   { path: '', redirectTo: 'produtos', pathMatch: 'full' },
   { path: 'produtos', component: ProductsPageComponent },
   { path: 'categorias', component: CategoriesPageComponent },
